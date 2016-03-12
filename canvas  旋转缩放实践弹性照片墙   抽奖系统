@@ -1,0 +1,135 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta http-equiv="content-type" charset="utf-8" />
+    <meta http-equiv="content-type" content="text/html" />
+    <title>demo</title>
+    <style type="text/css">
+       canvas{
+        background:#eee;
+       }
+    </style>
+    <script>
+    
+     window.onload=function(){
+      var canvas=document.getElementById("canvas");
+      var cobj=canvas.getContext("2d");
+      //抽奖旋转盘
+   cobj.lineWidth=8;
+   
+   cobj.translate(200,300);
+   var angle=0;
+   var step=60+10*Math.random();
+   var t=setInterval(function(){
+    angle+=step;
+    if(step<=0){
+        step==0       
+        clearInterval(t);
+    }else{
+       step-=0.5;     //step作用让他慢慢速度变缓慢
+    }
+   
+    cobj.clearRect(-200,-300,600,600);
+        cobj.moveTo(200,0);
+        cobj.lineTo(350,0);
+        cobj.stroke();
+        cobj.save();       //将现有状态存储，避免重复叠加
+         cobj.rotate(angle*Math.PI/180);
+        var colorr=["red","green","yellow","blue","black"];
+        for(var i=1;i<6;i++){
+            cobj.beginPath();
+            cobj.moveTo(0,0);
+            cobj.arc(0,0,150,(i-1)*72*Math.PI/180,i*72*Math.PI/180);
+             cobj.fillStyle=colorr[i-1];
+            cobj.closePath();
+            cobj.fill();
+       }
+       //中间白色圆
+       cobj.beginPath();
+       cobj.fillStyle="#fff";
+       cobj.arc(0,0,50,0,2*Math.PI)
+       cobj.fill();
+       //字
+       var arr=["100","10","20","30","50"];
+       for(var j=0;j<5;j++){
+        cobj.save()
+        cobj.fillStyle="#fff";
+        cobj.font="20px 微软雅黑";
+        cobj.rotate(j*70*Math.PI/180);
+        cobj.fillText(arr[j],80,60);
+        cobj.restore();
+
+       }
+      cobj.restore();
+ 
+   
+   },100)
+   
+   
+   
+   
+   
+   
+   
+   // 弹性照片墙
+    var imgs=document.getElementsByTagName("img");
+    var vx=0;
+    var vy=0;
+    var tx=0.8;
+    var mcx=0.6;
+    var startx=100;
+    var starty=-100;
+    var changex=startx;
+    var changey=starty;
+    var endx=100;
+    var endy=200;
+    setInterval(function(){
+     cobj.clearRect(0,0,1500,1500);
+     for(var j=0;j<4;j++){        //主要是一个弹性如何去实现
+         arr[j].vx+=(arr[j].endx-arr[j].changex)*arr[j].tx;
+          arr[j].vy+=(arr[j].endy-arr[j].changey)*arr[j].tx;
+         
+         arr[j].changex+=(arr[j].vx*=arr[j].mcx);
+         arr[j].changey+=(arr[j].vy*=arr[j].mcx);
+         cobj.beginPath();
+         cobj.lineWidth=8
+         cobj.strokeStyle="black"
+         cobj.moveTo(arr[j].startx,arr[j].starty);
+         cobj.lineTo(arr[j].changex,arr[j].changey);
+         cobj.stroke();
+         cobj.drawImage(imgs[j],arr[j].changex-100,arr[j].changey,200,200)
+     }
+
+    },60)
+    var arr=[];
+    for(var i=0;i<4;i++){
+        var obj={
+           vx:0,
+           vy:0,
+           tx:0.8,
+           mcx:0.6,
+           startx:300*(i-1)+100,
+           starty:-100,
+           changex:300*(i-1)+100,
+           changey:-100,
+           endx:300*(i-1)+100,
+           endy:200+200*Math.random(),
+        }
+        arr.push(obj);
+    }
+    }
+    </script>
+</head>
+
+
+<body>
+   <canvas width="1500px" height="1500px" id="canvas"></canvas>
+   <img src="1.jpg"  hidden/>
+    <img src="2.jpg"  hidden/>
+     <img src="3.jpg" hidden/>
+     <img src="4.jpg" hidden/>
+
+
+</body>
+</html>
+   
